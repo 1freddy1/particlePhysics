@@ -11,9 +11,8 @@ b_fit = 73.98761609907108
 
 
 
-
-
 calibrate = Calibrator(mv, kev)
+print(calibrate)
 #Find the fit parameters for a line
 #a_fit, b_fit = calibrate.calibrate_paramers(mv, kev)
 
