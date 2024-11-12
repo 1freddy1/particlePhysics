@@ -18,6 +18,7 @@ class Calibrator():
         for i in range(len(kev)):
             linelist.append(fitfunction(mv[i], a_fit, b_fit))
         return a_fit, b_fit
+    
     def convert_mv_kev_list(self, a_fit, b_fit, mv):
         keV = []
         for i in range(len(mv)):
