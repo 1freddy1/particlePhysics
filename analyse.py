@@ -5,27 +5,22 @@ from scipy.optimize import curve_fit
 
 def fitfunction(x, a, b):
             return a* x + b
+
 class Calibrator():
     def __init__(self, mv, kev):
         self.mv = mv
         self.kev = kev
 
-    def calibrate_paramers(self, mv, kev):
+    def calc_fit_parameters(self):
 
-        params, covariance = curve_fit(fitfunction, mv, kev)
+        params, covariance = curve_fit(fitfunction, self.mv, self.kev)
         a_fit, b_fit = params
         linelist = []
-        for i in range(len(kev)):
-            linelist.append(fitfunction(mv[i], a_fit, b_fit))
+        for i in range(len(self.kev)):
+            linelist.append(fitfunction(self.mv[i], a_fit, b_fit))
         return a_fit, b_fit
-    def convert_mv_kev_list(self, a_fit, b_fit, mv):
-        keV = []
-        for i in range(len(mv)):
-            
-            keV.append(fitfunction(mv[i], a_fit, b_fit))
-        return keV
 
-    def read_spectrum(self, file):
+    def read_csv(self, file):
         mV =[]
         counts = []
         with open(file, newline='') as csvfile:
@@ -36,27 +31,25 @@ class Calibrator():
                 counts.append(int(row[1]))
         return mV, counts
     
-    def plot_results(self, a, b):
+
+
+def convert_mv_to_kev(a_fit, b_fit, mv):
+        keV = []
+        for i in range(len(mv)):
+            keV.append(fitfunction(mv[i], a_fit, b_fit))
+
+        return keV
+
+def plot_results(a, b):
         plt.plot(a, b)
         plt.xlabel("keV")
-        plt.ylabel("coutns")
-mv = [42.6,101.6]
-kev = [511,1274]
+        plt.ylabel("counts")
 
-def create_mv_kev_list(a_fit, b_fit, file):
-    mV =[]
-    keV = []
-    counts = []
-    with open(file, newline='') as csvfile:
-        csvreader = csv.reader(csvfile)
-        next(csvreader)
-        for row in csvreader:
-            mV.append(float(row[0]))
-            keV.append(fitfunction(float(row[0]), a_fit, b_fit))
-            counts.append(int(row[1]))
+
 class E_error(Exception):
     pass
-def find_peaks(min_search, max_search, counts, kev):
+
+def calculate_delta_E(min_search, max_search, counts, kev):
     delta_E = []
     new_count_list = counts[min_search:max_search]
     new_kev_list = kev[min_search:max_search]
