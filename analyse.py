@@ -63,11 +63,23 @@ class Calibrator():
                     count_b.append(int(row[2]))
             return mV, count_a, count_b
 
+    def read_csv(self, file):
+        mV =[]
+        counts = []
+        with open(file, newline='') as csvfile:
+            csvreader = csv.reader(csvfile)
+            next(csvreader)
+            for row in csvreader:
+                mV.append(float(row[0]))
+                counts.append(int(row[1]))
+        return mV, counts
     
     def plot_results(self, a, b):
         plt.plot(a, b)
         plt.xlabel("keV")
         plt.ylabel("coutns")
+
+        
 mv = [42.6,101.6]
 kev = [511,1274]
 

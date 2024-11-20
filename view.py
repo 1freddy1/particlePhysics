@@ -17,10 +17,10 @@ b_fit_2 = -17.881700554528628
 mv_1 = reverse(1170, a_fit_2, b_fit_2)
 mv_2= reverse(1330, a_fit_2, b_fit_2)
 
-new_a = 1/a_fit
-new_b = -b_fit/a_fit
-print(new_a)
-print(new_b)
+#new_a = 1/a_fit
+#new_b = -b_fit/a_fit
+#print(new_a)
+#print(new_b)
 
 
 calibrate = Calibrator(mv, kev)
