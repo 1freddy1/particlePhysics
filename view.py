@@ -2,14 +2,20 @@ from analyse import Calibrator, fitfunction, find_peaks, resolution_result, reve
 import matplotlib.pyplot as plt
 from scipy.ndimage import gaussian_filter
 import lmfit
-mv = [37,89]
+mv = [37.5,91.6]
 kev = [511,1274]
 mv_err = [1, 1]
 
-a_fit = 14.673076923076923
-b_fit = -31.90384615384616
+
+a_fit_1 = 13.385964912280699
+b_fit_1 = -11.052631578947228
+
+a_fit_2 = 14.10351201478743
+b_fit_2 = -17.881700554528628
 
 
+mv_1 = reverse(1170, a_fit_2, b_fit_2)
+mv_2= reverse(1330, a_fit_2, b_fit_2)
 
 new_a = 1/a_fit
 new_b = -b_fit/a_fit
@@ -22,16 +28,16 @@ calibrate = Calibrator(mv, kev)
 #Find the fit parameters for a line
 a_fit, b_fit = calibrate.calibrate_paramers(mv, kev, mv_err)
 
-
+print(a_fit, b_fit)
 
 
 #Read file
-mV, counts = calibrate.read_spectrum('cobalt')
-plt.plot(mV, counts)
-plt.show()
-#Smoothing out the values
-counts = gaussian_filter(counts, sigma=2)
+mV, count_a, count_b = calibrate.read_spectrum('rechter_detector_20_11_2024', True)
 
+#Smoothing out the values
+count_b = gaussian_filter(count_b, sigma=2)
+plt.plot(mV, count_b)
+plt.show()
 #Convert mV to keV
 keV = calibrate.convert_mv_kev_list(a_fit, b_fit, mV)
 max_kev = max(keV)
@@ -50,7 +56,7 @@ end_i = int(end / max_kev * 2000)
 #print(f"delta_E = {delta_E}")
 
 #Plot calibration
-calibrate.plot_results(keV, counts)
+calibrate.plot_results(keV, count_b)
 
 #Convert a mV value to keV
 kev = reverse(1330 , a_fit, b_fit)

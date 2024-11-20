@@ -38,16 +38,31 @@ class Calibrator():
             keV.append(fitfunction(mv[i], a_fit, b_fit))
         return keV
 
-    def read_spectrum(self, file):
-        mV =[]
-        counts = []
-        with open(file, newline='') as csvfile:
-            csvreader = csv.reader(csvfile)
-            next(csvreader)
-            for row in csvreader:
-                mV.append(float(row[0]))
-                counts.append(int(row[1]))
-        return mV, counts
+    def read_spectrum(self, file, two=False):
+        if two == False:
+            mV =[]
+            counts = []
+            with open(file, newline='') as csvfile:
+                csvreader = csv.reader(csvfile)
+                next(csvreader)
+                for row in csvreader:
+                    mV.append(float(row[0]))
+                    counts.append(int(row[1]))
+        
+            return mV, counts
+        if two == True:
+            mV =[]
+            count_a = []
+            count_b = []
+            with open(file, newline='') as csvfile:
+                csvreader = csv.reader(csvfile)
+                next(csvreader)
+                for row in csvreader:
+                    mV.append(float(row[0]))
+                    count_a.append(int(row[1]))
+                    count_b.append(int(row[2]))
+            return mV, count_a, count_b
+
     
     def plot_results(self, a, b):
         plt.plot(a, b)
