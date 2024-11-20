@@ -35,14 +35,22 @@ mV, count_a, count_b = read_spectrum('spectrum.csv', True)
 plt.plot(count_a)
 #plt.show()
 
+mV, background_a, background_b = read_spectrum('background', True)
+background_a = background_a[198:275]
+background_b = background_b[198:275]
+
+avg_a = np.mean(background_a) * 6
+avg_b = np.mean(background_b) * 6
+
+
 def calc_peak(counts):
     counts = counts[170:]
     counts = gaussian_filter(counts, sigma=2)
     peak = max(counts)
     return peak
 
-peak_1 = calc_peak(count_a)
-peak_2 = calc_peak(count_b)
+peak_1 = calc_peak(count_a) - avg_a
+peak_2 = calc_peak(count_b) - avg_b
 
 
 
@@ -61,7 +69,7 @@ def Third_part(p_1, p_2):
 
 
 
-L = 28.5
+L = 41.5
 L_err = 0.01
 x = 1 / (1 + np.sqrt(peak_1 / peak_2))
 x_err = np.sqrt((First_part(x,L,peak_1,peak_2) * peak_1_std) ** 2 + (Second_part(x,L,peak_1,peak_2) * peak_2_std) ** 2 + (Third_part(peak_1, peak_2) * L_err)**2)
